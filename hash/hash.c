@@ -88,7 +88,7 @@ void hash_table_set(HashTable *h, void *key, void *val)
 
         forward_list_push_front(h->buckets[key_val], new_item);
         h->n_elements++;
-        printf("Lista criada\n");
+        // printf("Lista criada\n");
     }
     else 
     {
@@ -100,14 +100,14 @@ void hash_table_set(HashTable *h, void *key, void *val)
             if (h->cmp_fn(item_aux->key, key) == 0)
             {
                 item_aux->val = val;
-                printf("Item atualizado!!!!\n");
+                // printf("Item atualizado!!!!\n");
             }
             else 
             {
                 HashTableItem *new_item = hash_item_construct(key, val);
                 forward_list_push_front(h->buckets[key_val], new_item);
                 h->n_elements++;
-                printf("Item criado e adicionado!!!\n");
+                // printf("Item criado e adicionado!!!\n");
             }    
         }
     }

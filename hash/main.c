@@ -3,6 +3,7 @@
 #include <string.h>
 #include "hash.h"
 #include "vector.h"
+#include "data.h"
 
 
 typedef struct Item
@@ -79,12 +80,12 @@ int compara_strings(void *a, void *b)
 
 int main() {
     char *content;
-    char *file_name  ;
-    char text[10000];
-    int count = 0;
-    char dir_name[30];
+    char *file_name;
+    char text[15000];
+    char dir_name[100];
 
-    Vector *files = vector_construct();
+    Vector *datas = vector_construct();
+    HashTable *h = hash_table_construct(21000, hash_indice, compara_strings);
 
     scanf("%s", dir_name);
     char path[50];
@@ -104,51 +105,70 @@ int main() {
 
     while(!feof(arq))
     {
-        file_name = fgets(text, 9999, arq);
+        file_name = fgets(text, 14999, arq);
         file_name = strtok(file_name, "\n");
-        // fscanf(arq, "%[^\n]\n", file_name);
-        char *aux = malloc(strlen(file_name)+1);
-        strcpy(aux, file_name);
-        vector_push_back(files, aux);
-    }
 
-    for (int i = 0; i < vector_size(files); i++)
-    {
-        Vector *words = vector_construct();
-        char aux[50];
+        char aux[100];
         strcpy(aux, path);
-        strcat(aux, vector_get(files, i));
+        strcat(aux, file_name);
 
+        char *file = strtok(file_name, "/");
+        file = strtok(NULL, "\n");
 
         arq2 = fopen(aux, "r");
-        content = fgets(text, 9999, arq2);
+        content = fgets(text, 14999, arq2);
         fclose(arq2);
+        // printf("%s\n", content);
 
-        printf("%s\n", text);
-        words = string_split(words, text);
+        Vector *words = vector_construct();
+
+        words = string_split(words, content);
         Vector *unique = vector_unique(words, compara_strings);
+
+        for (int j = 0; j < vector_size(unique); j++)
+        {
+            int count = 0;
+            for (int k = 0; k < vector_size(words); k++)
+            {
+                if (compara_strings(vector_get(words, k), vector_get(unique, j)) == 0)
+                {
+                    count++;
+                }
+            }
+            char *word = vector_get(unique, j);
+            // printf("Palavra: %s\n Vezes: %d\n", word, count);
+
+            Data *data = hash_table_get(h, word);
+
+            if (data == NULL)
+            {
+                Data *aux = data_construct(strdup(word));
+                data_add_pair(aux, file, count);
+                hash_table_set(h, strdup(aux->word), aux);
+                vector_push_back(datas, aux);
+            }
+            else
+            {
+                data_add_pair(data, file, count);
+                hash_table_set(h, strdup(data->word), data);
+            }
+
+            // printf("Palavra: %s\n Vezes: %d\n", aux->word, aux->qnt);
+
+        }
 
         libera_dados(words);
         vector_destroy(unique);
     }
 
-    for (int i = 0; i < vector_size(files); i++)
+    for (int i = 0; i < vector_size(datas); i++)
     {
-        free(vector_get(files, i));
+        Data *d_removed = vector_get(datas, i);
+        data_destroy(d_removed);
     }
 
-    vector_destroy(files);
-
-    // for (int i = 0; i < count; i++)
-    // {
-    //     fgets(file, 199, arq);
-
-    //     FILE *arq2 = fopen(file , "r");
-
-    //     fgets(text, 9999, arq2);
-    //     printf("%s\n", text);
-    //     fclose(arq2);
-    // }
+    hash_table_destroy(h);
+    vector_destroy(datas);
 
     fclose(arq);
 
