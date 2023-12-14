@@ -141,52 +141,35 @@ void *hash_table_get(HashTable *h, void *key)
     return NULL;
 };
 
-void *hash_table_pop(HashTable *h, void *key)
-{
-    int key_val = h->hash_fn(h, key);
-    HashTableItem *item_aux;
+// void *hash_table_pop(HashTable *h, void *key)
+// {
+//     int key_val = h->hash_fn(h, key);
+//     HashTableItem *item_aux;
 
-    if (h->buckets[key_val] == NULL)
-    {
-        return NULL;
-    }
-    else
-    {
-        for (int i = 0; i < forward_list_size(h->buckets[key_val]); i++)
-        {
-            item_aux = forward_list_get(h->buckets[key_val], i);
+//     if (h->buckets[key_val] == NULL)
+//     {
+//         return NULL;
+//     }
+//     else
+//     {
+//         for (int i = 0; i < forward_list_size(h->buckets[key_val]); i++)
+//         {
+//             item_aux = forward_list_get(h->buckets[key_val], i);
 
-            if (h->cmp_fn(item_aux->key, key) == 0)
-            {
-                data_type *item_removido = item_aux->val;
-                // forward_list_remove(h->buckets[key_val], key, h->cmp_fn);
-                _hash_pair_destroy(item_aux);
-                return item_removido;
-            }
-        }
-    }
-    return NULL; 
-};
+//             if (h->cmp_fn(item_aux->key, key) == 0)
+//             {
+//                 data_type *item_removido = item_aux->val;
+//                 // forward_list_remove(h->buckets[key_val], key, h->cmp_fn);
+//                 _hash_pair_destroy(item_aux);
+//                 return item_removido;
+//             }
+//         }
+//     }
+//     return NULL; 
+// };
 
 
 int hash_table_size(HashTable *h)
 {
     return h->table_size;
 };
-
-// int hash_indice(char *palavra, int tam_tabela)
-// {
-//     int tam = strlen(palavra);
-//     int soma = 0;
-//     int a = 31415;
-//     int b = 27183;
-
-
-//     for (int i = 0; i < tam; i++, a = (a*b) % (tam_tabela-1))
-//     {
-//         int ascii = palavra[i];
-//         soma = (soma * a + ascii) % tam_tabela ;
-//     }
-    
-//     return soma;
-// }
