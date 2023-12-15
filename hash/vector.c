@@ -15,7 +15,7 @@ static const int VECTOR_GROWTH_RATE = 2;
 
 Vector *vector_construct()
 {
-    Vector *v = (Vector *)calloc(1, sizeof(Vector));
+    Vector *v = (Vector *)malloc(sizeof(Vector));
     v->allocated = VECTOR_INIT_SIZE;
     v->size = 0;
     v->data = (data_type *)calloc(VECTOR_INIT_SIZE, sizeof(data_type));

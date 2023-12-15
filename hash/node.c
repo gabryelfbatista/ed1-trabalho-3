@@ -4,7 +4,7 @@
 
 Node *node_construct(data_type value, Node *next)
 {
-    Node *n = (Node *)malloc(sizeof(Node));
+    Node *n = (Node *)calloc(1, sizeof(Node));
     n->value = value;
     n->next = next;
     return n;

@@ -5,7 +5,7 @@
 #include "forward_list.h"
 #include "node.h"
 
-void _hash_pair_destroy(void *pair)
+void _hash_pair_destroy(HashTableItem *pair)
 {
     free(pair);
 }
@@ -33,7 +33,7 @@ struct HashTable
 
 HashTableItem *hash_item_construct(void *key, void* val)
 {
-    HashTableItem *h_item = (HashTableItem *)calloc(1, sizeof(HashTableItem));
+    HashTableItem *h_item = calloc(1, sizeof(HashTableItem));
     h_item->key = key;
     h_item->val = val;
 
@@ -42,12 +42,13 @@ HashTableItem *hash_item_construct(void *key, void* val)
 
 HashTable *hash_table_construct(int table_size, HashFunction hash_fn, CmpFunction cmp_fn)
 {
-    HashTable *hash_tbl = calloc(1, sizeof(HashTable));
+    HashTable *hash_tbl = (HashTable *)calloc(1, sizeof(HashTable));
 
     hash_tbl->table_size = table_size;
     hash_tbl->hash_fn = hash_fn;
     hash_tbl->cmp_fn = cmp_fn;
     hash_tbl->buckets = calloc(table_size, sizeof(ForwardList *));
+    hash_tbl->n_elements=0;
 
     return hash_tbl;
 }
@@ -79,41 +80,56 @@ void hash_table_set(HashTable *h, void *key, void *val)
 {
     int key_val = h->hash_fn(h, key);
 
-    HashTableItem *item_aux;
-
     if (h->buckets[key_val] == NULL)
     {
         h->buckets[key_val] = forward_list_construct();
-        HashTableItem *new_item = hash_item_construct(key, val);
-
-        forward_list_push_front(h->buckets[key_val], new_item);
-        h->n_elements++;
         // printf("Lista criada\n");
     }
-    else 
-    {
-        int f_list_size = forward_list_size(h->buckets[key_val]);
-        for (int i = 0; i < f_list_size; i++)
-        {
-            item_aux = forward_list_get(h->buckets[key_val], i);
-        
-            if (h->cmp_fn(item_aux->key, key) == 0)
-            {
-                item_aux->val = val;
-                // printf("Item atualizado!!!!\n");
-            }
-            else 
-            {
-                HashTableItem *new_item = hash_item_construct(key, val);
-                forward_list_push_front(h->buckets[key_val], new_item);
-                h->n_elements++;
-                // printf("Item criado e adicionado!!!\n");
-            }    
-        }
-    }
-    
-    
+    // HashTableItem *new_item = hash_item_construct(key, val);
+
+    forward_list_push_front(h->buckets[key_val], hash_item_construct(key, val));
+    h->n_elements++;   
 };
+
+// void hash_table_set(HashTable *h, void *key, void *val)
+// {
+//     int key_val = h->hash_fn(h, key);
+
+//     HashTableItem *item_aux;
+
+//     if (h->buckets[key_val] == NULL)
+//     {
+//         h->buckets[key_val] = forward_list_construct();
+//         HashTableItem *new_item = hash_item_construct(key, val);
+
+//         forward_list_push_front(h->buckets[key_val], new_item);
+//         h->n_elements++;
+//         // printf("Lista criada\n");
+//     }
+//     else 
+//     {
+//         int f_list_size = forward_list_size(h->buckets[key_val]);
+//         for (int i = 0; i < f_list_size; i++)
+//         {
+//             item_aux = forward_list_get(h->buckets[key_val], i);
+        
+//             if (h->cmp_fn(item_aux->key, key) == 0)
+//             {
+//                 item_aux->val = val;
+//                 // printf("Item atualizado!!!!\n");
+//             }
+//             else 
+//             {
+//                 HashTableItem *new_item = hash_item_construct(key, val);
+//                 forward_list_push_front(h->buckets[key_val], new_item);
+//                 h->n_elements++;
+//                 // printf("Item criado e adicionado!!!\n");
+//             }    
+//         }
+//     }
+    
+    
+// };
 
 void *hash_table_get(HashTable *h, void *key)
 {

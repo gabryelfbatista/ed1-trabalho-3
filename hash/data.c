@@ -2,17 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "data.h"
+#include "utils.h"
 
-
-typedef struct Pair
-{
-    char *file;
-    int qnt;
-} Pair;
 
 Pair *pair_construct(char *file, int qnt)
 {
-    Pair *p = (Pair *)calloc(1, sizeof(Pair));
+    Pair *p = (Pair *)malloc(sizeof(Pair));
     p->file = strdup(file);
     p->qnt = qnt;
 
@@ -24,11 +19,12 @@ void pair_destroy(Pair *p)
     free(p);
 }
 
+
 Data *data_construct(char *word)
 {
     Data *d = (Data *)calloc(1, sizeof(Data));
     d->word = word;
-    d->pairs = vector_construct();
+    d->pairs = hash_table_construct(10, hash_indice, compara_strings);
 
     return d;
 };
@@ -36,19 +32,26 @@ Data *data_construct(char *word)
 void data_add_pair(Data *d, char *file, int qnt)
 {
     Pair *p = pair_construct(file, qnt);
-    vector_push_back(d->pairs, p);
+    hash_table_set(d->pairs, p->file, p);
+};
+
+Pair *data_get_pair(Data *d, char* file)
+{
+    Pair *aux = hash_table_get(d->pairs, file);
+
+    return aux;
 };
 
 
-void data_destroy(Data *d)
-{
-    for (int i = 0; i < vector_size(d->pairs); i++)
-    {
-        Pair *aux = vector_get(d->pairs, i);
-        free(aux->file);
-        pair_destroy(aux);
-    }
-    vector_destroy(d->pairs);
-    free(d->word);
-    free(d);
-}; 
+// void data_destroy(Data *d)
+// {
+//     for (int i = 0; i < vector_size(d->pairs); i++)
+//     {
+//         Pair *aux = vector_get(d->pairs, i);
+//         free(aux->file);
+//         pair_destroy(aux);
+//     }
+//     vector_destroy(d->pairs);
+//     free(d->word);
+//     free(d);
+// }; 
