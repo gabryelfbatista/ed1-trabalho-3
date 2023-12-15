@@ -95,6 +95,8 @@ void buscador_print(char *dir_name, HashTable *h, CmpFunction cmp_fn)
 
     }
     print_and_destroy(heap);
+    libera_dados(words);
+    vector_destroy(unique);
     fclose(arq);
 
 };
