@@ -20,7 +20,7 @@ Indexador *indexador_construct(char *dir)
 
     Vector *save_datas = vector_construct();
     Vector *save_pairs = vector_construct();
-    BinaryTree *bt = hash_table_construct(compara_strings, key_destroy, data_destroy);
+    BinaryTree *bt = binary_tree_construct(compara_strings, key_destroy, data_destroy);
 
     FILE *arq = fopen(dir_name, "r");
     FILE *arq2;
@@ -48,7 +48,7 @@ Indexador *indexador_construct(char *dir)
 
         arq2 = fopen(aux_file, "r");
         content = fgets(text, 2999, arq2);
-        // printf("%s\n", content);
+        printf("%s\n", content);
         fclose(arq2);
 
         Vector *words = vector_construct();
@@ -61,12 +61,12 @@ Indexador *indexador_construct(char *dir)
         {
             char *word = vector_get(words, j);
             
+            printf("A PALAVRA EH: %s!!!\n", word);
             Data *data = binary_tree_get(bt, word);
-            // printf("A PALAVRA EH: %s!!!\n", word);
 
             if (data == NULL)
             {   
-                // printf("NAO ENCONTREI ADICIONEI UM NOVO\n");
+                printf("NAO ENCONTREI ADICIONEI UM NOVO\n");
                 Data *aux = data_construct(word);
                 new_pair = pair_construct(file, 1);
                 data_add_pair(aux, new_pair);
@@ -84,7 +84,7 @@ Indexador *indexador_construct(char *dir)
                     new_pair = pair_construct(file, 1);
                     data_add_pair(data, new_pair);
                     vector_push_back(save_pairs, new_pair);
-                    // printf("Acrescentei mais um tipo de arquivo!\n");
+                    printf("Acrescentei mais um tipo de arquivo!\n");
                 }
                 else
                 {

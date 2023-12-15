@@ -3,6 +3,7 @@
 #include <string.h>
 #include "data.h"
 #include "utils.h"
+#include "binary_tree.h"
 
 
 Pair *pair_construct(char *file, int qnt)
@@ -15,9 +16,10 @@ Pair *pair_construct(char *file, int qnt)
     return p;
 }
 
-void pair_destroy(Pair *p)
+void pair_destroy(void *p)
 {
-    free(p->file);
+    Pair *aux = p;
+    free(aux->file);
     // free(p);
 }
 
@@ -46,8 +48,9 @@ Pair *data_get_pair(Data *d, char* file)
 };
 
 
-void data_destroy(Data *d)
+void data_destroy(void *data)
 {
+    Data *d = data;
     binary_tree_destroy(d->pairs);
     // free(d->word);
     free(d);

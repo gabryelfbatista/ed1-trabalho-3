@@ -132,19 +132,22 @@ void *binary_tree_get(BinaryTree *b, void *key)
 {
     Node *aux = b->root;
 
-    while(!b->cmp_fn(key,aux->key_val))
+    if (aux != NULL)
     {
-        if (b->cmp_fn(key, aux->key_val) < 0)
+        while(!b->cmp_fn(key,aux->key_val))
         {
-            aux = aux->left;
+            if (b->cmp_fn(key, aux->key_val) < 0)
+            {
+                aux = aux->left;
+            }
+            else
+            {
+                aux = aux->right;
+            }
         }
-        else
-        {
-            aux = aux->right;
-        }
+        return aux->key_val;
     }
-
-    return aux->key_val;
+    return NULL;
 };
 
 // Node *get_remove(BinaryTree *b, int key)
@@ -237,4 +240,7 @@ void *binary_tree_get(BinaryTree *b, void *key)
 //     }
 // };
 
-void binary_tree_destroy(BinaryTree *b);
+void binary_tree_destroy(BinaryTree *b)
+{
+    printf("aaaa\n");
+};
