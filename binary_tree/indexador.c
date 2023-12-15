@@ -77,7 +77,7 @@ Indexador *indexador_construct(char *dir)
             }
             else 
             {
-                Pair *aux_pair = data_get_pair(data, file);
+                Pair *aux_pair = binary_tree_get(data->pairs, file);
 
                 if (aux_pair == NULL)
                 {

@@ -134,9 +134,13 @@ void *binary_tree_get(BinaryTree *b, void *key)
 
     if (aux != NULL)
     {
-        while(!b->cmp_fn(key,aux->key_val))
+        while(aux != NULL)
         {
-            if (b->cmp_fn(key, aux->key_val) < 0)
+            if (b->cmp_fn(key,aux->key_val->key) == 0)
+            {
+                return aux->key_val;
+            }
+            else if (b->cmp_fn(key, aux->key_val) < 0)
             {
                 aux = aux->left;
             }
@@ -145,7 +149,6 @@ void *binary_tree_get(BinaryTree *b, void *key)
                 aux = aux->right;
             }
         }
-        return aux->key_val;
     }
     return NULL;
 };
