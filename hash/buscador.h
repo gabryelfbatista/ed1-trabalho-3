@@ -3,6 +3,6 @@
 
 #include "hash.h"
 
-void buscador_print(char *dir_name, HashTable *h, CmpFunction cmp_fn);
+void buscador_print(char *dir_name, HashTable *h);
 
 #endif

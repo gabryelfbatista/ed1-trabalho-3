@@ -15,8 +15,10 @@ int main() {
     scanf("%s", dir_name);
     strcpy(path, dir_name);
 
-    HashTable *h = indexador_construct(dir_name, hash_indice, compara_strings);
+    Indexador *i = indexador_construct(dir_name, hash_indice, compara_strings);
 
-    buscador_print(path, h, compara_strings);
+    buscador_print(path, i->hash);
+
+    indexador_destroy(i);
     return 0;
 }

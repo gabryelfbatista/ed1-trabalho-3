@@ -8,7 +8,8 @@
 Pair *pair_construct(char *file, int qnt)
 {
     Pair *p = (Pair *)malloc(sizeof(Pair));
-    p->file = strdup(file);
+    p->file = malloc(sizeof(char)*100);
+    strcpy(p->file, file);
     p->qnt = qnt;
 
     return p;
@@ -16,22 +17,24 @@ Pair *pair_construct(char *file, int qnt)
 
 void pair_destroy(Pair *p)
 {
-    free(p);
+    free(p->file);
+    // free(p);
 }
 
 
 Data *data_construct(char *word)
 {
     Data *d = (Data *)calloc(1, sizeof(Data));
-    d->word = word;
+    d->word = malloc(sizeof(char)*100);
+    strcpy(d->word, word);
     d->pairs = hash_table_construct(10, hash_indice, compara_strings);
 
     return d;
 };
 
-void data_add_pair(Data *d, char *file, int qnt)
+void data_add_pair(Data *d, Pair *p)
 {
-    Pair *p = pair_construct(file, qnt);
+    // Pair *p = pair_construct(file, qnt);
     hash_table_set(d->pairs, p->file, p);
 };
 
@@ -43,15 +46,18 @@ Pair *data_get_pair(Data *d, char* file)
 };
 
 
-// void data_destroy(Data *d)
-// {
-//     for (int i = 0; i < vector_size(d->pairs); i++)
-//     {
-//         Pair *aux = vector_get(d->pairs, i);
-//         free(aux->file);
-//         pair_destroy(aux);
-//     }
-//     vector_destroy(d->pairs);
-//     free(d->word);
-//     free(d);
-// }; 
+void data_destroy(Data *d)
+{
+    hash_table_destroy(d->pairs);
+    // free(d->word);
+    free(d);
+}; 
+
+void data_pair_destroy(Data *d, char *file)
+{
+    Pair *aux = hash_table_get(d->pairs, file);
+    if (aux != NULL)
+    {
+        pair_destroy(aux);
+    }
+};

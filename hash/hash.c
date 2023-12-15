@@ -5,22 +5,11 @@
 #include "forward_list.h"
 #include "node.h"
 
-void _hash_pair_destroy(HashTableItem *pair)
+void _hash_pair_destroy(HashTableItem *item)
 {
-    free(pair);
+    free(item);
 }
 
-// int hashU(char *val, int m)
-// {
-//     int h, a = 31415, b = 27183;
-
-//     for (h = 0; *val = '\0'; val++, a = (a*b)%(m-1))
-//     {
-//         h = (a*h + *val)%m;
-//     }
-
-//     return h;
-// }
 
 struct HashTable
 {
@@ -83,53 +72,12 @@ void hash_table_set(HashTable *h, void *key, void *val)
     if (h->buckets[key_val] == NULL)
     {
         h->buckets[key_val] = forward_list_construct();
-        // printf("Lista criada\n");
     }
-    // HashTableItem *new_item = hash_item_construct(key, val);
 
     forward_list_push_front(h->buckets[key_val], hash_item_construct(key, val));
     h->n_elements++;   
 };
 
-// void hash_table_set(HashTable *h, void *key, void *val)
-// {
-//     int key_val = h->hash_fn(h, key);
-
-//     HashTableItem *item_aux;
-
-//     if (h->buckets[key_val] == NULL)
-//     {
-//         h->buckets[key_val] = forward_list_construct();
-//         HashTableItem *new_item = hash_item_construct(key, val);
-
-//         forward_list_push_front(h->buckets[key_val], new_item);
-//         h->n_elements++;
-//         // printf("Lista criada\n");
-//     }
-//     else 
-//     {
-//         int f_list_size = forward_list_size(h->buckets[key_val]);
-//         for (int i = 0; i < f_list_size; i++)
-//         {
-//             item_aux = forward_list_get(h->buckets[key_val], i);
-        
-//             if (h->cmp_fn(item_aux->key, key) == 0)
-//             {
-//                 item_aux->val = val;
-//                 // printf("Item atualizado!!!!\n");
-//             }
-//             else 
-//             {
-//                 HashTableItem *new_item = hash_item_construct(key, val);
-//                 forward_list_push_front(h->buckets[key_val], new_item);
-//                 h->n_elements++;
-//                 // printf("Item criado e adicionado!!!\n");
-//             }    
-//         }
-//     }
-    
-    
-// };
 
 void *hash_table_get(HashTable *h, void *key)
 {

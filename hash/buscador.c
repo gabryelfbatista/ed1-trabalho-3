@@ -19,7 +19,8 @@ typedef struct Relev
 Relev *relev_construct(char *name, int qnt)
 {
     Relev *r = (Relev *)calloc(1, sizeof(Relev));
-    r->name = strdup(name);
+    r->name = malloc(sizeof(char)*100);
+    strcpy(r->name, name);
     r->qnt = qnt;
     return r;
 }
@@ -47,7 +48,7 @@ void print_and_destroy(Heap *h)
     heap_destroy(h);
 }
 
-void buscador_print(char *dir_name, HashTable *h, CmpFunction cmp_fn)
+void buscador_print(char *dir_name, HashTable *h)
 {
     char text[100];
     char search[200];
@@ -58,7 +59,7 @@ void buscador_print(char *dir_name, HashTable *h, CmpFunction cmp_fn)
     Vector *words = vector_construct();
     words = string_split(words, search);
 
-    Vector *unique = vector_unique(words, cmp_fn);
+    Vector *unique = vector_unique(words, compara_strings);
 
     strcat(dir_name, FILES_PATH);
 
