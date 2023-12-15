@@ -7,7 +7,7 @@
 
 Pair *pair_construct(char *file, int qnt)
 {
-    Pair *p = (Pair *)malloc(sizeof(Pair));
+    Pair *p = malloc(sizeof(Pair));
     p->file = malloc(sizeof(char)*100);
     strcpy(p->file, file);
     p->qnt = qnt;
@@ -24,7 +24,7 @@ void pair_destroy(Pair *p)
 
 Data *data_construct(char *word)
 {
-    Data *d = (Data *)calloc(1, sizeof(Data));
+    Data *d = malloc(sizeof(Data));
     d->word = malloc(sizeof(char)*100);
     strcpy(d->word, word);
     d->pairs = hash_table_construct(10, hash_indice, compara_strings);

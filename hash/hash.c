@@ -31,7 +31,7 @@ HashTableItem *hash_item_construct(void *key, void* val)
 
 HashTable *hash_table_construct(int table_size, HashFunction hash_fn, CmpFunction cmp_fn)
 {
-    HashTable *hash_tbl = (HashTable *)calloc(1, sizeof(HashTable));
+    HashTable *hash_tbl = calloc(1, sizeof(HashTable));
 
     hash_tbl->table_size = table_size;
     hash_tbl->hash_fn = hash_fn;
