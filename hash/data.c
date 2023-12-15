@@ -4,6 +4,7 @@
 #include "data.h"
 #include "utils.h"
 
+#define PAIRS_SIZE 1000
 
 Pair *pair_construct(char *file, int qnt)
 {
@@ -27,7 +28,7 @@ Data *data_construct(char *word)
     Data *d = malloc(sizeof(Data));
     d->word = malloc(sizeof(char)*100);
     strcpy(d->word, word);
-    d->pairs = hash_table_construct(10, hash_indice, compara_strings);
+    d->pairs = hash_table_construct(PAIRS_SIZE, hash_indice, compara_strings);
 
     return d;
 };

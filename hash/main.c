@@ -19,6 +19,6 @@ int main() {
 
     buscador_print(path, i->hash);
 
-    indexador_destroy(i);
+    // indexador_destroy(i);
     return 0;
 }

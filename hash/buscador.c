@@ -9,7 +9,6 @@
 
 #define FILES_PATH "/files.txt"
 
-
 typedef struct Relev
 {
     char *name;
@@ -42,6 +41,7 @@ void print_and_destroy(Heap *h)
         if(count < 10)
         {
             printf("%s\n", aux->name);
+            count++;
         }
         relev_destroy(aux);
     }
@@ -73,8 +73,8 @@ void buscador_print(char *dir_name, HashTable *h)
         int total = 0;
         for (int i = 0; i < vector_size(unique); i++)
         {
-            char *palavra = vector_get(unique, i);
-            printf("Palavra: %s\n key: %d\n", palavra, hash_indice(h, palavra));
+            // char *palavra = vector_get(unique, i);
+            // printf("Palavra: %s\n key: %d\n", palavra, hash_indice(h, palavra));
 
             Data *data_print = hash_table_get(h, vector_get(unique, i));
             if (data_print != NULL)
@@ -82,12 +82,12 @@ void buscador_print(char *dir_name, HashTable *h)
                 Pair *p = hash_table_get(data_print->pairs, content);
                 if (p!= NULL)
                 {
-                    printf("File: %s Quantidade: %d\n", p->file, p->qnt);
+                    // printf("File: %s Quantidade: %d\n", p->file, p->qnt);
                     total = total + p->qnt;
                 }
             }
         }
-        printf("Total de vezes do arquivo %s %d\n", content, total);
+        // printf("Total de vezes do arquivo %s %d\n", content, total);
         if (total != 0)
         {
             Relev *file_relev = relev_construct(content, total);

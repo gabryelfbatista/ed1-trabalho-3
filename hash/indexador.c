@@ -7,7 +7,9 @@
 #include "utils.h"
 #include "indexador.h"
 
+//Troque esses defines para ler o arquivo com os nomes de arquivos ou tamanho da hash
 #define FILE_LIST_FILE_NAME "/files.txt"
+#define HASH_SIZE 15000
 
 Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_fn)
 {
@@ -20,7 +22,7 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 
     Vector *save_datas = vector_construct();
     Vector *save_pairs = vector_construct();
-    HashTable *h = hash_table_construct(10, hash_fn, cmp_fn);
+    HashTable *h = hash_table_construct(HASH_SIZE, hash_fn, cmp_fn);
 
     FILE *arq = fopen(dir_name, "r");
     FILE *arq2;
@@ -97,9 +99,9 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
         libera_dados(words);
         vector_destroy(unique);
 
-        printf("NOME DO ARQUIVO ADICIONADO %s\n", new_pair->file);
-        int size = vector_size(save_pairs);
-        printf("Tamanho vetor de pares: %d", size);
+        // printf("NOME DO ARQUIVO ADICIONADO %s\n", new_pair->file);
+        // int size = vector_size(save_pairs);
+        // printf("Tamanho vetor de pares: %d", size);
     }
 
     Indexador *indexador = (Indexador *)calloc(1, sizeof(Indexador));
