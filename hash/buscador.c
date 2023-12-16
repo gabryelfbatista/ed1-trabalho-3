@@ -3,7 +3,7 @@
 #include <string.h>
 #include "buscador.h"
 #include "utils.h"
-#include "data.h"
+#include "pair.h"
 #include "vector.h"
 #include "heap.h"
 
@@ -72,24 +72,18 @@ void buscador_print(char *search, char *dir_name, HashTable *h)
         int total = 0;
         for (int i = 0; i < vector_size(unique); i++)
         {
-            // char *palavra = vector_get(unique, i);
-            // printf("Palavra: %s\n key: %d\n", palavra, hash_indice(h, palavra));
-
             HashTable *pair = hash_table_get(h, vector_get(unique, i));
             if (pair != NULL)
             {
                 Pair *file = hash_table_get(pair, content);
                 if (file != NULL)
                 {
-                    printf("File: %s Quantidade: %d\n", content, file->qnt);
                     total = total + file->qnt;
                 }
             }
         }
-        // printf("Total de vezes do arquivo %s %d\n", content, total);
         if (total != 0)
         {
-            // printf("%s\n", content);
             Relev *file_relev = relev_construct(content, total);
             heap_push(heap, file_relev, file_relev->qnt);
         }

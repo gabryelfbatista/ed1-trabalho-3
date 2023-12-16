@@ -30,7 +30,7 @@ struct HashTable
 
 HashTableItem *hash_item_construct(void *key, void* val)
 {
-    HashTableItem *h_item = calloc(1, sizeof(HashTableItem));
+    HashTableItem *h_item = (HashTableItem *)calloc(1, sizeof(HashTableItem));
     h_item->key = key;
     h_item->val = val;
 
@@ -56,13 +56,17 @@ void hash_table_destroy(HashTable *h)
     {
         if (h->buckets[i] != NULL)
         {
-            Node *n = forward_list_get(h->buckets[i], 0);
+            Node *n = forward_list_get(h->buckets[i], 1);
 
             while (n != NULL)
             {
                 HashTableItem *pair = n->value;
-                _hash_pair_destroy(pair);
+                if (pair != NULL)
+                {
+                    _hash_pair_destroy(pair);
+                }
                 n = n->next;
+                h->n_elements--;        
             }
 
             forward_list_destroy(h->buckets[i]);
@@ -82,7 +86,8 @@ void hash_table_set(HashTable *h, void *key, void *val)
         h->buckets[key_val] = forward_list_construct();
     }
 
-    forward_list_push_front(h->buckets[key_val], hash_item_construct(key, val));
+    HashTableItem *new_item = hash_item_construct(key, val);
+    forward_list_push_front(h->buckets[key_val], new_item);
     h->n_elements++;   
 };
 
@@ -117,4 +122,9 @@ void *hash_table_get(HashTable *h, void *key)
 int hash_table_size(HashTable *h)
 {
     return h->table_size;
+};
+
+int hash_n_elements(HashTable *h)
+{
+    return h->n_elements;
 };

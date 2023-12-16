@@ -4,7 +4,6 @@
 #include <time.h>
 #include "hash.h"
 #include "vector.h"
-#include "data.h"
 #include "indexador.h"
 #include "utils.h"
 #include "buscador.h"
