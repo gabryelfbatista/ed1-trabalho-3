@@ -157,10 +157,10 @@ void forward_list_cat(ForwardList *l, ForwardList *m)
 void forward_list_destroy(ForwardList *l) 
 {
     Node *aux = l->head;
-    Node *new_next;
+    
     while (aux != NULL)
     {
-        new_next = aux->next;
+        Node *new_next = aux->next;
         free(aux);
         aux = new_next;
     }

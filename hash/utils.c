@@ -26,7 +26,10 @@ void libera_dados(Vector *words)
 {
     for (int i = 0; i < vector_size(words); i++)
         // libera os espacos alocados pelo strdup
-        free(vector_get(words, i));
+        if (vector_get(words, i) != NULL)
+        {
+            free(vector_get(words, i));
+        }
 
     // libera o vetor
     vector_destroy(words);

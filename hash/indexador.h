@@ -6,8 +6,8 @@
 typedef struct Indexador
 {
     HashTable *hash;
-    Vector *datas;
-    Vector *pairs;
+    Vector *w;
+    Vector *f;
 } Indexador;
 
 Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_fn);

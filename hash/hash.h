@@ -3,12 +3,6 @@
 
 typedef struct HashTable HashTable;
 
-typedef struct
-{
-    void *key;
-    void *val;
-}HashTableItem;
-
 /* 
 define o tipo HashFunction como um ponteiro de função que recebe como entrada a tabela hash 
 (para que o número de buckets possa ser usado para calcular o hash) e a chave do tipo void* e gera como saída um inteiro.

@@ -20,8 +20,8 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
     strcat(path, "/");
     strcat(dir_name, FILE_LIST_FILE_NAME);
 
-    Vector *save_datas = vector_construct();
-    Vector *save_pairs = vector_construct();
+    Vector *save_words = vector_construct();
+    Vector *save_files = vector_construct();
     HashTable *h = hash_table_construct(HASH_SIZE, hash_fn, cmp_fn);
 
     FILE *arq = fopen(dir_name, "r");
@@ -59,40 +59,53 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
         Vector *unique = vector_unique(words, cmp_fn);
         
         Pair *new_pair;
+
+        int qnt = 1;
         for (int j = 0; j < vector_size(words); j++)
         {
-            
             char *word = vector_get(words, j);
-            
-            Data *data = hash_table_get(h, word);
-            // printf("A PALAVRA EH: %s!!!\n", word);
+            char *copy_file = strdup(file);
 
-            if (data == NULL)
+            HashTable *hash_file = hash_table_get(h, word);
+            printf("A PALAVRA EH: %s!!!\n", word);
+
+            if (hash_file == NULL)
             {   
-                // printf("NAO ENCONTREI ADICIONEI UM NOVO\n");
-                Data *aux = data_construct(word);
-                new_pair = pair_construct(file, 1);
-                data_add_pair(aux, new_pair);
+                hash_file = hash_table_construct(10, hash_indice, compara_strings);
+                char *copy_word = strdup(word);
+                new_pair = pair_construct(copy_file, 1);
+                hash_table_set(hash_file, new_pair->file, new_pair);
+                hash_table_set(h, copy_word, hash_file);
+                printf("NAO ENCONTREI ADICIONEI UM NOVO\n");
+
+                // Data *aux = data_construct(word);
+                // data_add_pair(aux, new_pair);
+                // hash_table_set(h, aux->word, aux);
+
                 // char *copy = strdup(aux->word);
-                hash_table_set(h, aux->word, aux);
-                vector_push_back(save_datas, aux);
-                vector_push_back(save_pairs, new_pair);
+                vector_push_back(save_words, copy_word);
+                vector_push_back(save_files, copy_file);
             }
             else 
             {
-                Pair *aux_pair = data_get_pair(data, file);
-
-                if (aux_pair == NULL)
+                // Pair *aux_pair = data_get_pair(pair, file);
+                Pair *aux  = hash_table_get(hash_file, file);
+                
+                if (aux == NULL)
                 {
                     new_pair = pair_construct(file, 1);
-                    data_add_pair(data, new_pair);
-                    vector_push_back(save_pairs, new_pair);
-                    // printf("Acrescentei mais um tipo de arquivo!\n");
+                    hash_table_set(hash_file, new_pair->file, new_pair);
+
+                    // new_pair = pair_construct(file, 1);
+                    // data_add_pair(pair, new_pair);
+                    vector_push_back(save_files, copy_file);
+                    printf("Acrescentei mais um tipo de arquivo!\n");
                 }
                 else
                 {
-                    aux_pair->qnt++;
-                    // printf("Somei mais um no arquivo %s\n", aux_pair->file);
+                    free(copy_file);
+                    aux->qnt++;
+                    printf("Somei mais um no arquivo %s quantidade: %d\n", file, aux->qnt);
                 }
             }
         }
@@ -101,18 +114,18 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
         vector_destroy(unique);
 
         // printf("NOME DO ARQUIVO ADICIONADO %s\n", new_pair->file);
-        // int size = vector_size(save_pairs);
+        // int size = vector_size(save_files);
         // printf("Tamanho vetor de pares: %d", size);
     }
 
     Indexador *indexador = (Indexador *)calloc(1, sizeof(Indexador));
     indexador->hash = h;
-    indexador->datas = save_datas;
-    indexador->pairs = save_pairs;
+    indexador->w = save_words;
+    indexador->f = save_files;
 
-    // for (int i = 0; i < vector_size(save_datas); i++)
+    // for (int i = 0; i < vector_size(save_words); i++)
     // {
-    //     Data *aux = vector_get(save_datas, i);
+    //     Data *aux = vector_get(save_words, i);
     //     Vector *unique_file_names = vector_unique(pair_file_name, compara_strings);
     //     for (int j = 0; j < vector_size(unique_file_names); j++)
     //     {
@@ -131,19 +144,36 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 
 void indexador_destroy(Indexador *i)
 {
-    
-    for (int j = 0; j < vector_size(i->pairs); j++)
+    Vector *pairs  = vector_construct();
+    Vector *unique_files = vector_unique(i->f, compara_strings);
+    for (int j = 0; j < vector_size(i->w); j++)
     {
-        pair_destroy(vector_get(i->pairs, j));
+        char *palavra = vector_get(i->w, j);
+        printf("a palavra na hora de destruir eh %s\n", palavra);
+        HashTable *aux = hash_table_get(i->hash, vector_get(i->w, j));
+        // hash_table_destroy(aux);
+        for (int k = 0; k < vector_size(unique_files); k++)
+        {
+            Pair *aux_pair = hash_table_get(aux, vector_get(unique_files, k));
+            if (aux_pair != NULL)
+            {
+                printf("Estou destruindo o arquivo %s da palavra %s\n", aux_pair->file, palavra);
+                // pair_destroy(aux_pair);
+                vector_push_back(pairs, aux_pair);
+            }
+        }
     }
-    vector_destroy(i->pairs);
-
-    for (int j = 0; j < vector_size(i->datas); j++)
-    {
-        data_destroy(vector_get(i->datas, j));
-    }
-    vector_destroy(i->datas);
-
     hash_table_destroy(i->hash);
+    for (int i = 0; i < vector_size(pairs); i++)
+    {
+        pair_destroy(vector_get(pairs, i));
+    }
+
+    libera_dados(i->f);
+    libera_dados(i->w);
+    vector_destroy(unique_files);
+    // hash_table_destroy(aux);
+    
+
     free(i);
 };

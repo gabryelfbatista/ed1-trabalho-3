@@ -75,14 +75,14 @@ void buscador_print(char *search, char *dir_name, HashTable *h)
             // char *palavra = vector_get(unique, i);
             // printf("Palavra: %s\n key: %d\n", palavra, hash_indice(h, palavra));
 
-            Data *data_print = hash_table_get(h, vector_get(unique, i));
-            if (data_print != NULL)
+            HashTable *pair = hash_table_get(h, vector_get(unique, i));
+            if (pair != NULL)
             {
-                Pair *p = hash_table_get(data_print->pairs, content);
-                if (p!= NULL)
+                Pair *file = hash_table_get(pair, content);
+                if (file != NULL)
                 {
-                    // printf("File: %s Quantidade: %d\n", p->file, p->qnt);
-                    total = total + p->qnt;
+                    printf("File: %s Quantidade: %d\n", content, file->qnt);
+                    total = total + file->qnt;
                 }
             }
         }

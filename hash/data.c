@@ -9,8 +9,7 @@
 Pair *pair_construct(char *file, int qnt)
 {
     Pair *p = malloc(sizeof(Pair));
-    p->file = malloc(sizeof(char)*100);
-    strcpy(p->file, file);
+    p->file = strdup(file);
     p->qnt = qnt;
 
     return p;
@@ -18,7 +17,7 @@ Pair *pair_construct(char *file, int qnt)
 
 void pair_destroy(Pair *p)
 {
-    free(p->file);
+    // free(p->file);
     free(p);
 }
 
@@ -39,12 +38,6 @@ void data_add_pair(Data *d, Pair *p)
     hash_table_set(d->pairs, p->file, p);
 };
 
-Pair *data_get_pair(Data *d, char* file)
-{
-    Pair *aux = hash_table_get(d->pairs, file);
-
-    return aux;
-};
 
 
 void data_destroy(Data *d)
