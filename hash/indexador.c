@@ -15,7 +15,7 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 {
     char *dir_name = dir;
     char path[100];
-    char text[3000];
+    char text[10000];
     strcpy(path, dir_name);
     strcat(path, "/");
     strcat(dir_name, FILE_LIST_FILE_NAME);
@@ -35,7 +35,7 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 
     while (!feof(arq))
     {
-        fgets(text, 2999, arq);
+        fgets(text, 9999, arq);
         char *content = strtok(text, "\n");
         // printf("%s\n", file_name);
 
@@ -49,7 +49,7 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
         file = strtok(NULL, "\n");
 
         arq2 = fopen(aux_file, "r");
-        content = fgets(text, 2999, arq2);
+        content = fgets(text, 9999, arq2);
         // printf("%s\n", content);
         fclose(arq2);
 
@@ -57,10 +57,11 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 
         words = string_split(words, content);
         Vector *unique = vector_unique(words, cmp_fn);
-
+        
         Pair *new_pair;
         for (int j = 0; j < vector_size(words); j++)
         {
+            
             char *word = vector_get(words, j);
             
             Data *data = hash_table_get(h, word);

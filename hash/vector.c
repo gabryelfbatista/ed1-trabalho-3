@@ -10,7 +10,7 @@ struct Vector
 };
 
 
-static const int VECTOR_INIT_SIZE = 10;
+static const int VECTOR_INIT_SIZE = 100;
 static const int VECTOR_GROWTH_RATE = 2;
 
 Vector *vector_construct()

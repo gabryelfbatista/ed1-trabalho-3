@@ -40,7 +40,7 @@ void print_and_destroy(Heap *h)
 
         if(count < 10)
         {
-            printf("%s\n", aux->name);
+            printf("%s  %d\n", aux->name, aux->qnt);
             count++;
         }
         relev_destroy(aux);
@@ -50,7 +50,7 @@ void print_and_destroy(Heap *h)
 
 void buscador_print(char *dir_name, HashTable *h)
 {
-    char text[100];
+    char text[10000];
     char search[200];
     fflush(stdin);
     scanf(" %[^\n]%*c", search);
@@ -66,7 +66,7 @@ void buscador_print(char *dir_name, HashTable *h)
     FILE *arq = fopen(dir_name, "r");   
     while (!feof(arq))
     {
-        fgets(text, 99, arq);
+        fgets(text, 9999, arq);
         char *content = strtok(text, "/");
         content = strtok(NULL, "\n");
         
@@ -90,6 +90,7 @@ void buscador_print(char *dir_name, HashTable *h)
         // printf("Total de vezes do arquivo %s %d\n", content, total);
         if (total != 0)
         {
+            // printf("%s\n", content);
             Relev *file_relev = relev_construct(content, total);
             heap_push(heap, file_relev, file_relev->qnt);
         }
