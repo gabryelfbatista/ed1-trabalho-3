@@ -20,7 +20,7 @@ void pair_destroy(void *p)
 {
     Pair *aux = p;
     free(aux->file);
-    // free(p);
+    free(p);
 }
 
 
@@ -52,7 +52,7 @@ void data_destroy(void *data)
 {
     Data *d = data;
     binary_tree_destroy(d->pairs);
-    // free(d->word);
+    free(d->word);
     free(d);
 }; 
 

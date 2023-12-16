@@ -3,6 +3,6 @@
 
 #include "binary_tree.h"
 
-void buscador_print(char *dir_name, BinaryTree *b);
+void buscador_print(char *search, char *dir_name, BinaryTree *b);
 
 #endif

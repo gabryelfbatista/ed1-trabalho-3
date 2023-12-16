@@ -136,11 +136,11 @@ void *binary_tree_get(BinaryTree *b, void *key)
     {
         while(aux != NULL)
         {
-            if (b->cmp_fn(key,aux->key_val->key) == 0)
+            if (b->cmp_fn(key, aux->key_val->key) == 0)
             {
-                return aux->key_val;
+                return aux->key_val->value;
             }
-            else if (b->cmp_fn(key, aux->key_val) < 0)
+            else if (b->cmp_fn(key, aux->key_val->key) < 0)
             {
                 aux = aux->left;
             }
@@ -153,97 +153,20 @@ void *binary_tree_get(BinaryTree *b, void *key)
     return NULL;
 };
 
-// Node *get_remove(BinaryTree *b, int key)
-// {
-//     Node *aux = b->root;
-
-//     while(key != aux->key)
-//     {
-//         if (key < aux->key)
-//         {
-//             aux = aux->left;
-//         }
-//         else
-//         {
-//             aux = aux->right;
-//         }
-//     }
-
-//     return aux;
-// };
-
-// Node *get_prev(BinaryTree *b, int key)
-// {
-//    Node *prev = NULL;
-//    Node *aux = b->root;
-
-//    while(key != aux->key)
-//     {
-//         if (key < aux->key)
-//         {
-//             prev = aux;
-//             aux = aux->left;
-//         }
-//         else
-//         {
-//             prev = aux;
-//             aux = aux->right;
-//         }
-//     }
-
-//     return prev;
-// };
-
-// void transplant(BinaryTree *b, Node* u, Node *v)
-// {
-//     Node *prev_u = get_prev(b, u->key);
-//     Node *prev_v = get_prev(b, v->key);
-
-//     if (prev_u == NULL)
-//     {
-//         b->root = v;
-//     }
-//     else if (u == prev_u->left)
-//     {
-//         prev_u->left = v;
-//     }
-//     else 
-//     {
-//         prev_u->right = v;
-//     }
-
-//     if (v != NULL)
-//     {
-//         prev_v = prev_u;
-//     }
-// };
-
-// void *binary_tree_remove(BinaryTree *b, int key)
-// {
-//     Node *removed_item = get_remove(b, key);
-
-//     if (removed_item->left == NULL)
-//     {
-//         transplant(b, removed_item, removed_item->right);
-//     }
-//     else if (removed_item->right == NULL)
-//     {
-//         transplant(b, removed_item, removed_item->left);
-//     }
-//     else 
-//     {
-//         Node *minimum = binary_tree_minimun(removed_item->right);
-
-//         Node *prev_minimun = get_prev(b, minimum->key);
-//         if (prev_minimun->key != removed_item->key)
-//         {
-//             transplant(b, minimum, minimum->right);
-//             minimum->right = removed_item->right;
-//         }
-//     }
-// };
-
-void binary_tree_destroy(BinaryTree *b)
+void _destroy_node_recursive(Node *node)
 {
-    printf("aaaa\n");
-};
+    if (node == NULL)
+        return;
+
+    _destroy_node_recursive(node->left);
+    _destroy_node_recursive(node->right);
+
+    key_val_pair_destroy(node->key_val);
+    node_destroy(node);
+}
+
+void binary_tree_destroy(BinaryTree *bt)
+{
+    _destroy_node_recursive(bt->root);
+    free(bt);
+}

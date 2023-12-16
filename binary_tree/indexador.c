@@ -13,7 +13,7 @@ Indexador *indexador_construct(char *dir)
 {
     char *dir_name = dir;
     char path[100];
-    char text[3000];
+    char text[10000];
     strcpy(path, dir_name);
     strcat(path, "/");
     strcat(dir_name, FILE_LIST_FILE_NAME);
@@ -33,7 +33,7 @@ Indexador *indexador_construct(char *dir)
 
     while (!feof(arq))
     {
-        fgets(text, 2999, arq);
+        fgets(text, 9999, arq);
         char *content = strtok(text, "\n");
         // printf("%s\n", file_name);
 
@@ -47,8 +47,8 @@ Indexador *indexador_construct(char *dir)
         file = strtok(NULL, "\n");
 
         arq2 = fopen(aux_file, "r");
-        content = fgets(text, 2999, arq2);
-        printf("%s\n", content);
+        content = fgets(text, 9999, arq2);
+        // printf("%s\n", content);
         fclose(arq2);
 
         Vector *words = vector_construct();
@@ -61,12 +61,12 @@ Indexador *indexador_construct(char *dir)
         {
             char *word = vector_get(words, j);
             
-            printf("A PALAVRA EH: %s!!!\n", word);
+            // printf("A PALAVRA EH: %s!!!\n", word);
             Data *data = binary_tree_get(bt, word);
 
             if (data == NULL)
             {   
-                printf("NAO ENCONTREI ADICIONEI UM NOVO\n");
+                // printf("NAO ENCONTREI ADICIONEI UM NOVO\n");
                 Data *aux = data_construct(word);
                 new_pair = pair_construct(file, 1);
                 data_add_pair(aux, new_pair);
@@ -84,7 +84,7 @@ Indexador *indexador_construct(char *dir)
                     new_pair = pair_construct(file, 1);
                     data_add_pair(data, new_pair);
                     vector_push_back(save_pairs, new_pair);
-                    printf("Acrescentei mais um tipo de arquivo!\n");
+                    // printf("Acrescentei mais um tipo de arquivo!\n");
                 }
                 else
                 {
@@ -97,9 +97,9 @@ Indexador *indexador_construct(char *dir)
         libera_dados(words);
         vector_destroy(unique);
 
-        printf("NOME DO ARQUIVO ADICIONADO %s\n", new_pair->file);
-        int size = vector_size(save_pairs);
-        printf("Tamanho vetor de pares: %d", size);
+        // printf("NOME DO ARQUIVO ADICIONADO %s\n", new_pair->file);
+        // int size = vector_size(save_pairs);
+        // printf("Tamanho vetor de pares: %d", size);
     }
 
     Indexador *indexador = (Indexador *)calloc(1, sizeof(Indexador));
@@ -126,19 +126,21 @@ Indexador *indexador_construct(char *dir)
     return indexador;
 };
 
-// void indexador_destroy(Indexador *i)
-// {
+void indexador_destroy(Indexador *i)
+{
     
-//     // for (int j = 0; j < vector_size(i->pairs); j++)
-//     // {
-//     //     pair_destroy(vector_get(i->pairs, j));
-//     // }
+    for (int j = 0; j < vector_size(i->pairs); j++)
+    {
+        pair_destroy(vector_get(i->pairs, j));
+    }
+    vector_destroy(i->pairs);
 
-//     // for (int j = 0; j < vector_size(i->datas); j++)
-//     // {
-//     //     data_destroy(vector_get(i->datas, j));
-//     // }
-
-//     hash_table_destroy(i->hash);
-//     free(i);
-// };
+    for (int j = 0; j < vector_size(i->datas); j++)
+    {
+        data_destroy(vector_get(i->datas, j));
+    }
+    vector_destroy(i->datas);
+    
+    binary_tree_destroy(i->b);
+    free(i);
+};

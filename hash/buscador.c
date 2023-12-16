@@ -33,7 +33,7 @@ void relev_destroy(Relev *r)
 void print_and_destroy(Heap *h)
 {
     int count = 0;
-    printf("Arquivos mais relevantes para busca selecionada:\n");
+    printf("\nArquivos mais relevantes para busca selecionada:\n");
     while (!heap_empty(h))
     {
         Relev *aux = heap_pop(h);
@@ -45,15 +45,14 @@ void print_and_destroy(Heap *h)
         }
         relev_destroy(aux);
     }
+    printf("\n");
     heap_destroy(h);
 }
 
-void buscador_print(char *dir_name, HashTable *h)
+void buscador_print(char *search, char *dir_name, HashTable *h)
 {
     char text[10000];
-    char search[200];
-    fflush(stdin);
-    scanf(" %[^\n]%*c", search);
+
 
     Heap *heap = heap_construct();
     Vector *words = vector_construct();
