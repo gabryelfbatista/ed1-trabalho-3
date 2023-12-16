@@ -19,7 +19,7 @@ Pair *pair_construct(char *file, int qnt)
 void pair_destroy(Pair *p)
 {
     free(p->file);
-    // free(p);
+    free(p);
 }
 
 
@@ -50,7 +50,7 @@ Pair *data_get_pair(Data *d, char* file)
 void data_destroy(Data *d)
 {
     hash_table_destroy(d->pairs);
-    // free(d->word);
+    free(d->word);
     free(d);
 }; 
 

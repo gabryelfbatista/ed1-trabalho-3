@@ -44,6 +44,6 @@ int main()
     dt = end - start;
     printf("O tempo para buscar foi: %f segundos\n", dt);
 
-    // indexador_destroy(i);
+    indexador_destroy(i);
     return 0;
 }

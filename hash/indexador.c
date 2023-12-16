@@ -132,15 +132,17 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 void indexador_destroy(Indexador *i)
 {
     
-    // for (int j = 0; j < vector_size(i->pairs); j++)
-    // {
-    //     pair_destroy(vector_get(i->pairs, j));
-    // }
+    for (int j = 0; j < vector_size(i->pairs); j++)
+    {
+        pair_destroy(vector_get(i->pairs, j));
+    }
+    vector_destroy(i->pairs);
 
-    // for (int j = 0; j < vector_size(i->datas); j++)
-    // {
-    //     data_destroy(vector_get(i->datas, j));
-    // }
+    for (int j = 0; j < vector_size(i->datas); j++)
+    {
+        data_destroy(vector_get(i->datas, j));
+    }
+    vector_destroy(i->datas);
 
     hash_table_destroy(i->hash);
     free(i);
