@@ -10,7 +10,7 @@ typedef struct Indexador
     Vector *f;
 } Indexador;
 
-Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_fn);
+Indexador *indexador_construct(char *dir);
 
 void indexador_destroy(Indexador*i);
 

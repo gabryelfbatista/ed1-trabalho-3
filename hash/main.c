@@ -28,7 +28,7 @@ int main()
     strcpy(path, dir_name);
 
     start = get_timestamp();
-    Indexador *i = indexador_construct(dir_name, hash_indice, compara_strings);
+    Indexador *i = indexador_construct(dir_name);
     end = get_timestamp();
     dt = end - start;
     printf("O tempo para indexar foi: %f segundos\n\n", dt);

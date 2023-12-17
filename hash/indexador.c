@@ -9,9 +9,10 @@
 
 //Troque esses defines para ler o arquivo com os nomes de arquivos ou tamanho da hash
 #define FILE_LIST_FILE_NAME "/files.txt"
-#define HASH_SIZE 10
+#define HASH_SIZE 1000
+#define PAIR_HASH_SIZE 100
 
-Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_fn)
+Indexador *indexador_construct(char *dir)
 {
     char *dir_name = dir;
     char path[100];
@@ -33,7 +34,7 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
 
     Vector *save_words = vector_construct(); //para salvar as palavras que sao adicionadas na hash
     Vector *save_files = vector_construct(); //para salvar os nomes de arquivos que sao adicionados
-    HashTable *h = hash_table_construct(HASH_SIZE, hash_fn, cmp_fn);
+    HashTable *h = hash_table_construct(HASH_SIZE, hash_indice, compara_strings);
 
     while (!feof(arq))
     {
@@ -59,11 +60,10 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
         Vector *words = vector_construct();
 
         words = string_split(words, content);
-        Vector *unique = vector_unique(words, cmp_fn);
+        Vector *unique = vector_unique(words, compara_strings);
         
         Pair *new_pair;
 
-        int qnt = 1;
         char *copy_word;
         char *copy_file;
         for (int j = 0; j < vector_size(words); j++)
@@ -77,7 +77,7 @@ Indexador *indexador_construct(char *dir, HashFunction hash_fn, CmpFunction cmp_
             if (hash_file == NULL)
             {   
                 // se nao existir, cria uma hash, um par arquivo quantidade e adiciona na hash da palavra
-                HashTable *new_hash_file = hash_table_construct(10, hash_indice, compara_strings);
+                HashTable *new_hash_file = hash_table_construct(PAIR_HASH_SIZE, hash_indice, compara_strings);
                 copy_word = strdup(word);
                 new_pair = pair_construct(copy_file, 1);
 
@@ -131,9 +131,7 @@ void indexador_destroy(Indexador *i)
     for (int j = 0; j < vector_size(i->w); j++)
     {
         char *palavra = vector_get(i->w, j);
-        printf("a palavra na hora de destruir eh %s\n", palavra);
-        HashTable *aux = hash_table_get(i->hash, vector_get(i->w, j));
-
+        HashTable *aux = hash_table_get(i->hash, palavra);
     
         for (int k = 0; k < vector_size(unique_files); k++)
         {
@@ -141,7 +139,6 @@ void indexador_destroy(Indexador *i)
             Pair *aux_pair = hash_table_get(aux, removed_file);
             if (aux_pair != NULL)
             {
-                printf("Estou destruindo o arquivo %s da palavra %s\n", aux_pair->file, palavra);
                 pair_destroy(aux_pair);
             }
         }
