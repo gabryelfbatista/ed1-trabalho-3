@@ -12,7 +12,9 @@
 
 
 /**
- * Struct criado para salvar os arquivos de relevancia para busca
+ * Relev -> relevancia
+ * struct criado para salvar o nome de um arquivo e quantas vezes as palavras
+ * que foram buscadas apareceram nesse tal arquivo
 */
 typedef struct Relev
 {
@@ -21,6 +23,7 @@ typedef struct Relev
 } Relev;
 
 
+// aloca na memoria esse struct Relev
 Relev *relev_construct(char *name, int qnt)
 {
     Relev *r = (Relev *)calloc(1, sizeof(Relev));
@@ -31,6 +34,7 @@ Relev *relev_construct(char *name, int qnt)
 }
 
 
+// printa e desaloca tudo da heap de relevantes
 void relev_destroy(Relev *r)
 {
     free(r->name);
@@ -77,6 +81,9 @@ void buscador_print(char *search, char *dir_name, BinaryTree *b)
         content = strtok(NULL, "\n");
         
         int total = 0;
+
+        // pra cada palavra buscada busca na arvore e soma quantas vezes apareceram a partir
+        // do nome de um determinado arquivo
         for (int i = 0; i < vector_size(unique); i++)
         {
 
@@ -86,12 +93,11 @@ void buscador_print(char *search, char *dir_name, BinaryTree *b)
                 Pair *p = binary_tree_get(data_print->pairs, content);
                 if (p!= NULL)
                 {
-                    // printf("File: %s Quantidade: %d\n", p->file, p->qnt);
                     total = total + p->qnt;
                 }
             }
         }
-        // printf("Total de vezes do arquivo %s %d\n", content, total);
+
         if (total != 0)
         {
             Relev *file_relev = relev_construct(content, total);

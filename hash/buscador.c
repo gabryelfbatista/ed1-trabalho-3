@@ -9,12 +9,19 @@
 
 #define FILES_PATH "/files.txt"
 
+/**
+ * Relev -> relevancia
+ * struct criado para salvar o nome de um arquivo e quantas vezes as palavras
+ * que foram buscadas apareceram nesse tal arquivo
+*/
 typedef struct Relev
 {
     char *name;
     int qnt;
 } Relev;
 
+
+// aloca na memoria esse struct Relev
 Relev *relev_construct(char *name, int qnt)
 {
     Relev *r = (Relev *)calloc(1, sizeof(Relev));
@@ -24,12 +31,16 @@ Relev *relev_construct(char *name, int qnt)
     return r;
 }
 
+
+// desaloca o struct relev
 void relev_destroy(Relev *r)
 {
     free(r->name);
     free(r);
 }
 
+
+// printa e desaloca tudo da heap de relevantes
 void print_and_destroy(Heap *h)
 {
     int count = 0;
@@ -70,6 +81,9 @@ void buscador_print(char *search, char *dir_name, HashTable *h)
         content = strtok(NULL, "\n");
         
         int total = 0;
+
+        // pra cada palavra buscada busca na hash e soma quantas vezes apareceram a partir
+        // do nome de um determinado arquivo
         for (int i = 0; i < vector_size(unique); i++)
         {
             HashTable *pair = hash_table_get(h, vector_get(unique, i));
