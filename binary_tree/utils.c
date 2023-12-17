@@ -3,6 +3,10 @@
 #include <string.h>
 #include "utils.h"
 
+/**
+ * TAD criado para armazenas as funções uteis para serem usadas em outros tads
+ * que não sejam opacos e genericos
+*/
 
 Vector *string_split(Vector * v, char *str)
 {

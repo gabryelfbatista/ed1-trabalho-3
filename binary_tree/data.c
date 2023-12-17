@@ -40,13 +40,6 @@ void data_add_pair(Data *d, Pair *p)
     binary_tree_set(d->pairs, p->file, p);
 };
 
-Pair *data_get_pair(Data *d, char* file)
-{
-    Pair *aux = binary_tree_get(d->pairs, file);
-
-    return aux;
-};
-
 
 void data_destroy(void *data)
 {

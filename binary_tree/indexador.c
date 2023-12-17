@@ -65,10 +65,13 @@ Indexador *indexador_construct(char *dir)
         {
             char *word = vector_get(words, j);
             
+            // verifica se ja existe um data da palavra na arvore
             Data *data = binary_tree_get(bt, word);
 
             if (data == NULL)
             {   
+                // se nao existir, cria uma data que possui uma arvore binaria e adiciona o arquivo
+                // e quantidade nessa segunda arvore
                 Data *aux = data_construct(word);
                 new_pair = pair_construct(file, 1);
 
@@ -80,10 +83,12 @@ Indexador *indexador_construct(char *dir)
             }
             else 
             {
+                // se existir, busca o par do arquivo
                 Pair *aux_pair = binary_tree_get(data->pairs, file);
 
                 if (aux_pair == NULL)
                 {
+                    // se ainda n tiver o par do determinado arquivo, cria o par e adiciona
                     new_pair = pair_construct(file, 1);
                     data_add_pair(data, new_pair);
 
@@ -91,6 +96,7 @@ Indexador *indexador_construct(char *dir)
                 }
                 else
                 {
+                    // se existir apenas atualiza a quantidade
                     aux_pair->qnt++;
                 }
             }
@@ -111,12 +117,14 @@ Indexador *indexador_construct(char *dir)
 
 void indexador_destroy(Indexador *i)
 {
+    // destroi todos pares arquivo-quantidade
     for (int j = 0; j < vector_size(i->pairs); j++)
     {
         pair_destroy(vector_get(i->pairs, j));
     }
     vector_destroy(i->pairs);
 
+    // destroi todos datas com palavra-arvore
     for (int j = 0; j < vector_size(i->datas); j++)
     {
         data_destroy(vector_get(i->datas, j));
